@@ -1,4 +1,10 @@
-const root = document.getElementById("app")!;
-root.innerText = "Works!";
+import { StartShell } from "../wailsjs/go/main/Terminal";
+import { EventsOn } from "../wailsjs/runtime";
 
-export {};
+(async () => {
+    const root = document.querySelector("#app") as HTMLElement;
+    const shellId = await StartShell();
+    EventsOn(shellId, (text: string) => {
+        root.innerText = text;
+    });
+})();
