@@ -8,4 +8,19 @@ body {
     font-family: 'JetBrainsMono Nerd Font', monospace;
     background-color: #1E1E1E;
     color: white;
+    width: 100vw;
+    height: 100vh;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+}
+
+.xterm-rows {
+    font-family: inherit !important;
+}
+
+.xterm-viewport {
+    background: transparent !important;
 }

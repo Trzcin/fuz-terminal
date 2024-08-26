@@ -12,8 +12,6 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-const HistorySize = 16
-
 type Terminal struct {
 	ctx    context.Context
 	shells []*os.File
@@ -46,14 +44,9 @@ func (t *Terminal) StartShell() (string, error) {
 	t.shells = append(t.shells, shell)
 	id := fmt.Sprint(cmd.Process.Pid)
 
-	buffer := [][]rune{}
 	reader := bufio.NewReader(shell)
-	readChan := make(chan bool)
 
-	// read from shell and store in buffer
 	go func() {
-		line := []rune{}
-		buffer = append(buffer, line)
 		for {
 			r, _, err := reader.ReadRune()
 			if err != nil {
@@ -63,31 +56,31 @@ func (t *Terminal) StartShell() (string, error) {
 				return
 			}
 
-			line = append(line, r)
-			buffer[len(buffer)-1] = line
-			if r == '\n' {
-				if len(buffer) > HistorySize {
-					buffer = buffer[1:]
-				}
-				line = []rune{}
-				buffer = append(buffer, line)
-			}
-
-			readChan <- true
+			runtime.EventsEmit(t.ctx, id, string(r))
 		}
 	}()
 
-	// send shell output as string to frontend
-	go func() {
-		for {
-			<-readChan
-			text := ""
-			for _, line := range buffer {
-				text += string(line)
-			}
-			runtime.EventsEmit(t.ctx, id, text)
+	runtime.EventsOn(t.ctx, id+"/write", func(optionalData ...any) {
+		switch data := optionalData[0].(type) {
+		case string:
+			shell.WriteString(data)
+		default:
+			runtime.LogError(t.ctx, "Data to write is not a string")
 		}
-	}()
+	})
+
+	runtime.EventsOn(t.ctx, id+"/resize", func(optionalData ...any) {
+		cols, ok := optionalData[0].(float64)
+		if !ok {
+			runtime.LogError(t.ctx, "Cols is not a float64")
+		}
+		rows, ok := optionalData[1].(float64)
+		if !ok {
+			runtime.LogError(t.ctx, "Rows is not an float64")
+		}
+
+		pty.Setsize(shell, &pty.Winsize{Cols: uint16(cols), Rows: uint16(rows)})
+	})
 
 	return id, nil
 }
