@@ -2,6 +2,9 @@ import { Terminal } from "@xterm/xterm";
 import { StartShell } from "../wailsjs/go/main/Terminal";
 import { EventsEmit, EventsOn } from "../wailsjs/runtime";
 import "@xterm/xterm/css/xterm.css";
+import { globalCSS } from "./global";
+
+document.adoptedStyleSheets.push(globalCSS.stylesheet);
 
 (async () => {
     const root = document.querySelector("#app") as HTMLElement;
