@@ -43,6 +43,11 @@ class TerminalComponent extends Component {
         term.onData((data) => EventsEmit(shellId + "/write", data));
         EventsEmit(shellId + "/resize", term.cols, term.rows);
         term.onResize(({ cols, rows }) => EventsEmit(shellId + "/resize", cols, rows));
+
+        const observer = new ResizeObserver(([entry]) => {
+            term.resize(Math.floor(entry.contentRect.width / 9), Math.floor(entry.contentRect.height / 18));
+        });
+        observer.observe(el);
     }
 }
 customElements.define("xterm-terminal", TerminalComponent);
