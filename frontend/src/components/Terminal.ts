@@ -11,11 +11,6 @@ class TerminalComponent extends Component {
             #parent {
                 width: 100%;
                 height: 100%;
-                font-family: "JetBrainsMono Nerd Font", monospace;
-            }
-
-            .xterm-rows {
-                font-family: inherit !important;
             }
 
             .xterm-viewport {
@@ -35,7 +30,12 @@ class TerminalComponent extends Component {
         this.renderDom.appendChild(el);
         const rect = el.getBoundingClientRect();
 
-        const term = new Terminal({ cols: Math.floor(rect.width / 9), rows: Math.floor(rect.height / 18) });
+        const term = new Terminal({
+            cols: Math.floor(rect.width / 10),
+            rows: Math.floor(rect.height / 21),
+            fontSize: 16,
+            fontFamily: '"JetBrainsMono Nerd Font", monospace',
+        });
         term.open(el);
         const shellId = await StartShell();
         EventsOn(shellId, (text: string) => {
@@ -46,7 +46,7 @@ class TerminalComponent extends Component {
         term.onResize(({ cols, rows }) => EventsEmit(shellId + "/resize", cols, rows));
 
         const observer = new ResizeObserver(([entry]) => {
-            term.resize(Math.floor(entry.contentRect.width / 9), Math.floor(entry.contentRect.height / 18));
+            term.resize(Math.floor(entry.contentRect.width / 10), Math.floor(entry.contentRect.height / 21));
         });
         observer.observe(el);
     }

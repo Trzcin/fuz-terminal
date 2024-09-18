@@ -10,16 +10,24 @@ class Topbar extends Component {
         div {
             display: flex;
             align-items: center;
-            padding: 0 0.75rem;
+            padding: 0 1rem;
+            font-size: 1rem;
         }
 
         #session {
             background-color: #8ee53f;
             color: #232621;
+            font-weight: bold;
         }
 
         .tab {
-            gap: 0.25rem;
+            gap: 0.5rem;
+            font-weight: 600;
+
+            span {
+                font-size: 0.75rem;
+                color: #c2d9ad;
+            }
         }
     `;
 
