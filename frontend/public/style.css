@@ -5,3 +5,28 @@ body {
     height: 100vh;
     font-family: 'Open Sans';
 }
+
+:root {
+    --green-100: #d4ffad;
+    --green-300: #b0f274;
+    --green-500: #8ee53f;
+    --green-700: #6ab227;
+    --green-900: #488016;
+    --green-transparent: hsl(91, 76, 57, 40%)
+    
+    --orange-100: #ffb96b;
+    --orange-300: #fa9e37;
+    --orange-500: #f78404;
+    --orange-700: #c46802;
+    --orange-900: #914d00;
+
+    --bg-100: #555950;
+    --bg-300: #272b26;
+    --bg-500: #232621;
+    --bg-700: #151a11;
+    --bg-900: #090d06;
+    
+    --text-300: #fff;
+    --text-500: #dff2ce;
+    --text-700: #c2d9ad;
+}
