@@ -1,11 +1,3 @@
-body {
-    background-color: #1E1E1E;
-    color: white;
-    width: 100vw;
-    height: 100vh;
-    font-family: 'Open Sans';
-}
-
 :root {
     --green-100: #d4ffad;
     --green-300: #b0f274;
@@ -29,4 +21,12 @@ body {
     --text-300: #fff;
     --text-500: #dff2ce;
     --text-700: #c2d9ad;
+}
+
+body {
+    background-color: var(--bg-300);
+    color: white;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Open Sans';
 }
