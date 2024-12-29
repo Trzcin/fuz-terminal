@@ -35,7 +35,9 @@ func (t *Terminal) shutdown() {
 
 func (t *Terminal) StartShell() (string, error) {
 	shellPath := os.Getenv("SHELL")
+	homePath := os.Getenv("HOME")
 	cmd := exec.Command(shellPath)
+	cmd.Dir = homePath
 	shell, err := pty.StartWithSize(cmd, &pty.Winsize{Rows: 10, Cols: 80})
 	if err != nil {
 		runtime.LogError(t.ctx, "Unable to start shell")
