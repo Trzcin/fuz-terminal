@@ -33,9 +33,11 @@ export interface Session {
 }
 
 export const terminals = store<TerminalState[]>([]);
+
+export let nextSessionId = 2;
 export const sessions = store<Session[]>([
     {
-        name: "session",
+        name: "#1",
         active: true,
         tabs: [],
     },

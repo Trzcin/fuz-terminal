@@ -61,7 +61,7 @@ export class Topbar extends Component {
         #add-tab-btn {
             background-color: var(--bg-300);
             border: none;
-            color: white;
+            color: var(--text-500);
             padding: 0 1rem;
             font-size: 1.25rem;
             cursor: pointer;
@@ -96,10 +96,15 @@ export class Topbar extends Component {
         this.sessionContainer =
             this.renderDom.querySelector<HTMLElement>("div#session")!;
         this.sessionContainer.oncontextmenu = this.editSessionName.bind(this);
+        this.sessionContainer.onclick = () => {
+            this.dispatchEvent(new CustomEvent("showSessions"));
+        };
 
         sessions.subscribe((newValue) => {
             const activeSession = newValue.find((s) => s.active);
-            this.sessionContainer!.textContent = activeSession!.name;
+            if (activeSession) {
+                this.sessionContainer!.textContent = activeSession.name;
+            }
         });
     }
 
