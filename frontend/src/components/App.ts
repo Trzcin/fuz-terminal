@@ -139,21 +139,28 @@ class FuzApp extends Component {
 
         sessions.subscribe((newValue) => {
             this.sessionsContainer!.innerHTML = html`${newValue.map(
-                (s) =>
-                    html`<button ${s.active ? html`class="active"` : ""}>
+                (s, idx) =>
+                    html`<button
+                        class="session-btn ${s.active ? "active" : ""}"
+                        data-id=${idx}
+                    >
                         ${s.name}
                     </button>`
             )}`;
+            this.renderDom
+                .querySelectorAll<HTMLElement>(".session-btn")
+                .forEach((b) => {
+                    b.addEventListener("click", () => {
+                        this.switchSession(parseInt(b.dataset.id!));
+                        this.sessionModal?.close();
+                    });
+                });
         });
         this.renderDom.querySelector<HTMLButtonElement>(
             "#new-ses-btn"
         )!.onclick = () => {
             // set all current terminals to inactive
             const activeTermIdx = terminals.value.findIndex((t) => t.active);
-            terminals.value = terminals.value.map((t) => ({
-                ...t,
-                active: false,
-            }));
             this.renderDom
                 .querySelector(`#term-${terminals.value[activeTermIdx].id}`)
                 ?.removeAttribute("active");
@@ -175,6 +182,25 @@ class FuzApp extends Component {
 
             this.sessionModal?.close();
         };
+    }
+
+    private switchSession(id: number) {
+        // set all current terminals to inactive
+        const activeTermIdx = terminals.value.findIndex((t) => t.active);
+        this.renderDom
+            .querySelector(`#term-${terminals.value[activeTermIdx].id}`)
+            ?.removeAttribute("active");
+
+        sessions.value = sessions.value.map((s, idx) => ({
+            ...s,
+            active: idx == id,
+        }));
+
+        terminals.value = sessions.value[id].tabs;
+        const activeTermId = terminals.value.find((t) => t.active)?.id;
+        this.renderDom
+            .querySelector(`#term-${activeTermId}`)
+            ?.setAttribute("active", "");
     }
 }
 customElements.define("fuz-app", FuzApp);
