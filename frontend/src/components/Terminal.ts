@@ -65,6 +65,24 @@ class TerminalComponent extends Component {
             EventsEmit(shellId + "/resize", cols, rows)
         );
         term.focus();
+        term.onTitleChange((oscTitle) => {
+            const parts = oscTitle.split(" ");
+            let title = "~";
+            let subtitle = "fish";
+            if (parts.length == 1) {
+                title = parts[0];
+            } else {
+                subtitle = parts[0];
+                title = parts[1];
+            }
+            terminals.value = terminals.value.map((t) => {
+                if (t.id == shellId) {
+                    return { ...t, title, subtitle };
+                } else {
+                    return t;
+                }
+            });
+        });
 
         const observer = new ResizeObserver(([entry]) => {
             term.resize(
