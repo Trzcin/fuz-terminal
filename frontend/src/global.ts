@@ -6,4 +6,9 @@ export const globalCSS = css`
         padding: 0;
         box-sizing: border-box;
     }
+
+    input,
+    button {
+        font-family: inherit;
+    }
 `;

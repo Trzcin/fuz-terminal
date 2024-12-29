@@ -26,4 +26,26 @@ export interface TerminalState {
     active: boolean;
 }
 
+export interface Session {
+    name: string;
+    tabs: TerminalState[];
+    active: boolean;
+}
+
 export const terminals = store<TerminalState[]>([]);
+export const sessions = store<Session[]>([
+    {
+        name: "session",
+        active: true,
+        tabs: [],
+    },
+]);
+terminals.subscribe((newValue) => {
+    sessions.value = sessions.value.map((s) => {
+        if (s.active) {
+            return { ...s, tabs: newValue };
+        } else {
+            return s;
+        }
+    });
+});
