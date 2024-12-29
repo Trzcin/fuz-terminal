@@ -42,6 +42,19 @@ export class Topbar extends Component {
                 cursor: default;
             }
         }
+
+        #add-tab-btn {
+            background-color: var(--bg-300);
+            border: none;
+            color: white;
+            padding: 0 1rem;
+            font-size: 1.25rem;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--bg-500);
+            }
+        }
     `;
 
     private tabsContainer?: HTMLElement;
@@ -50,14 +63,19 @@ export class Topbar extends Component {
         super.connectedCallback();
         this.renderDom.innerHTML = html`
             <div id="session">session</div>
-            <div id="tabs">
-                <div class="tab active">~ <span>fish</span></div>
-                <div class="tab">fuz-terminal <span>fish</span></div>
-            </div>
+            <div id="tabs"></div>
+            <button id="add-tab-btn" title="New tab">+</button>
         `;
+
         this.tabsContainer = this.renderDom.querySelector("#tabs")!;
         this.renderTabs(terminals.value);
         terminals.subscribe(this.renderTabs.bind(this));
+
+        this.renderDom.querySelector<HTMLButtonElement>(
+            "#add-tab-btn"
+        )!.onclick = () => {
+            this.dispatchEvent(new CustomEvent("newTab"));
+        };
     }
 
     disconnectedCallback() {
@@ -72,13 +90,17 @@ export class Topbar extends Component {
                     ${t.title} <span>${t.subtitle}</span>
                 </div>`
         )}`;
-        this.renderDom.querySelectorAll<HTMLElement>(".tab:not(.active)").forEach(
-            (t) =>
-                (t.onclick = () => {
-                    const event = new CustomEvent("switchTab", { detail: t.id });
-                    this.dispatchEvent(event);
-                })
-        );
+        this.renderDom
+            .querySelectorAll<HTMLElement>(".tab:not(.active)")
+            .forEach(
+                (t) =>
+                    (t.onclick = () => {
+                        const event = new CustomEvent("switchTab", {
+                            detail: t.id,
+                        });
+                        this.dispatchEvent(event);
+                    })
+            );
     }
 }
 customElements.define("top-bar", Topbar);

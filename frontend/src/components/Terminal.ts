@@ -61,7 +61,10 @@ class TerminalComponent extends Component {
         });
         term.onData((data) => EventsEmit(shellId + "/write", data));
         EventsEmit(shellId + "/resize", term.cols, term.rows);
-        term.onResize(({ cols, rows }) => EventsEmit(shellId + "/resize", cols, rows));
+        term.onResize(({ cols, rows }) =>
+            EventsEmit(shellId + "/resize", cols, rows)
+        );
+        term.focus();
 
         const observer = new ResizeObserver(([entry]) => {
             term.resize(
